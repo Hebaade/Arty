@@ -4,8 +4,10 @@ import {
   TextField, Alert, CircularProgress, Paper
 } from "@mui/material";
 import {
-  createUserWithEmailAndPassword, updateProfile,
-  signInWithPopup, signInWithRedirect, getRedirectResult,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithPopup,
+  signInWithRedirect,
   onAuthStateChanged
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -28,101 +30,71 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [redirectHandled, setRedirectHandled] = useState(false);
 
-  const createUserDoc = async (uid, userData) => {
-    await setDoc(doc(db, "users", uid), {
-      ...userData,
+  const createUserDoc = async (user) => {
+    await setDoc(doc(db, "users", user.uid), {
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL || null,
       role: null,
       createdAt: new Date().toISOString(),
     }, { merge: true });
   };
 
   useEffect(() => {
-    if (isLocalhost) {
-      setRedirectHandled(true);
-      return;
-    }
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        dispatch(setUser({
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL
+        }));
 
-    setLoading(true);
-    getRedirectResult(auth)
-      .then(async (result) => {
-        if (result?.user) {
-          const u = result.user;
-          await createUserDoc(u.uid, {
-            displayName: u.displayName,
-            email: u.email,
-            photoURL: u.photoURL,
-          });
-          dispatch(setUser({
-            uid: u.uid,
-            email: u.email,
-            displayName: u.displayName,
-            photoURL: u.photoURL,
-          }));
-          navigate("/choose-role");
-        }
-      })
-      .catch((err) => {
-        if (err.code !== "auth/no-current-user") setError(err.message);
-      })
-      .finally(() => {
-        setRedirectHandled(true);
-        setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (!redirectHandled) return;
-
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
-      if (u) navigate("/choose-role");
+        await createUserDoc(user);
+        navigate("/choose-role");
+      }
     });
 
-    return () => unsubscribe();
-  }, [redirectHandled]);
+    return () => unsub();
+  }, []);
 
-  const handleGoogleRegister = async () => {
-    setError(""); setLoading(true);
+  const handleGoogle = async () => {
+    setLoading(true);
+    setError("");
+
     try {
       if (isLocalhost) {
         const result = await signInWithPopup(auth, googleProvider);
-        const u = result.user;
-        await createUserDoc(u.uid, {
-          displayName: u.displayName,
-          email: u.email,
-          photoURL: u.photoURL,
-        });
-        dispatch(setUser({
-          uid: u.uid,
-          email: u.email,
-          displayName: u.displayName,
-          photoURL: u.photoURL,
-        }));
-        navigate("/choose-role");
+        await createUserDoc(result.user);
       } else {
         await signInWithRedirect(auth, googleProvider);
       }
     } catch (err) {
       setError(err.message);
     } finally {
-      if (isLocalhost) setLoading(false);
+      setLoading(false);
     }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError(""); setLoading(true);
+    setLoading(true);
+    setError("");
+
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
+
       await updateProfile(result.user, { displayName: name });
-      await createUserDoc(result.user.uid, { displayName: name, email });
+      await createUserDoc(result.user);
+
       dispatch(setUser({
         uid: result.user.uid,
         email,
         displayName: name,
-        photoURL: null,
+        photoURL: null
       }));
+
       navigate("/choose-role");
     } catch (err) {
       setError(err.message);
@@ -132,91 +104,40 @@ const Register = () => {
   };
 
   return (
-    <Box sx={{
-      minHeight: "100vh",
-      bgcolor: "background.default",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      px: 2, py: 4,
-    }}>
-      <Box sx={{ width: "100%", maxWidth: 440 }}>
+    <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Box sx={{ width: 440 }}>
 
-        <Typography
-          variant="h4" fontWeight={800} textAlign="center" mb={1}
-          sx={{ fontFamily: "'Playfair Display', serif", color: "primary.main", cursor: "pointer" }}
-          onClick={() => navigate("/")}
-        >
-          Arty
-        </Typography>
-        <Typography textAlign="center" color="text.secondary" mb={4} variant="body2">
-          {t("auth.register_subtitle")}
-        </Typography>
+        <Typography variant="h4" textAlign="center">Arty</Typography>
 
-        <Paper sx={{
-          p: { xs: 3, sm: 4 },
-          borderRadius: 2,
-          border: "1px solid", borderColor: "divider",
-          boxShadow: "0 4px 24px rgba(44,24,16,0.08)",
-        }}>
+        <Paper sx={{ p: 3 }}>
 
-          <Typography variant="h5" fontWeight={700} mb={0.5}
-            sx={{ fontFamily: "'Playfair Display', serif" }}>
-            {t("auth.create_account")}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" mb={3}>
-            {t("auth.register_subtitle")}
-          </Typography>
+          {error && <Alert severity="error">{error}</Alert>}
 
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-
-          <Button
-            fullWidth variant="outlined" size="large"
-            onClick={handleGoogleRegister} disabled={loading}
-            startIcon={<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width={18} />}
-            sx={{ mb: 2, textTransform: "none", fontWeight: 600 }}
-          >
-            {t("auth.google")}
+          <Button fullWidth variant="outlined" onClick={handleGoogle} sx={{ mb: 2 }}>
+            Google
           </Button>
 
-          <Divider sx={{ mb: 2 }}>
-            <Typography variant="caption" color="text.secondary">or</Typography>
-          </Divider>
+          <Divider sx={{ mb: 2 }} />
 
           <Box component="form" onSubmit={handleRegister}>
-            <TextField
-              fullWidth label={t("auth.full_name")} size="small"
-              value={name} onChange={(e) => setName(e.target.value)}
-              sx={{ mb: 1.5 }} required
-            />
-            <TextField
-              fullWidth label={t("auth.email")} type="email" size="small"
-              value={email} onChange={(e) => setEmail(e.target.value)}
-              sx={{ mb: 1.5 }} required
-            />
-            <TextField
-              fullWidth label={t("auth.password")} type="password" size="small"
-              value={password} onChange={(e) => setPassword(e.target.value)}
-              sx={{ mb: 2.5 }} required
-            />
-            <Button
-              fullWidth variant="contained" type="submit"
-              size="large" disabled={loading}
-              sx={{ textTransform: "none", fontWeight: 700, py: 1.2 }}
-            >
-              {loading
-                ? <CircularProgress size={22} color="inherit" />
-                : t("auth.create_btn")
-              }
+            <TextField fullWidth label="Name" value={name}
+              onChange={(e) => setName(e.target.value)} sx={{ mb: 2 }} />
+
+            <TextField fullWidth label="Email" value={email}
+              onChange={(e) => setEmail(e.target.value)} sx={{ mb: 2 }} />
+
+            <TextField fullWidth label="Password" type="password"
+              value={password} onChange={(e) => setPassword(e.target.value)} sx={{ mb: 2 }} />
+
+            <Button fullWidth variant="contained" type="submit" disabled={loading}>
+              {loading ? <CircularProgress size={20} /> : "Create account"}
             </Button>
           </Box>
 
-          <Typography variant="body2" sx={{ mt: 2.5, textAlign: "center" }}>
-            {t("auth.already_account")}{" "}
-            <Link to="/login" style={{ color: "#8B5E3C", fontWeight: 600 }}>
-              {t("auth.sign_in_link")}
-            </Link>
+          <Typography textAlign="center" mt={2}>
+            <Link to="/login">Login</Link>
           </Typography>
+
         </Paper>
       </Box>
     </Box>
