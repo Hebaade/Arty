@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box, Button, Typography, Divider,
   TextField, Alert, CircularProgress, Paper
 } from "@mui/material";
-import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithPopup, signInWithRedirect, getRedirectResult,
+  signInWithEmailAndPassword
+} from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, googleProvider } from "../Firebase/auth";
 import { db } from "../Firebase/firestore";
@@ -12,10 +15,13 @@ import { setUser, setRole } from "../Store/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+const isLocalhost = window.location.hostname === "localhost";
+
 const Login = () => {
-  const dispatch    = useDispatch();
-  const navigate    = useNavigate();
-  const { t }       = useTranslation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { t }    = useTranslation();
+
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
   const [error, setError]       = useState("");
@@ -42,15 +48,32 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    if (isLocalhost) return;
+    setLoading(true);
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (result?.user) await handleAfterLogin(result.user);
+      })
+      .catch((err) => {
+        if (err.code !== "auth/no-current-user") setError(err.message);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   const handleGoogleLogin = async () => {
     setError(""); setLoading(true);
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      await handleAfterLogin(result.user);
+      if (isLocalhost) {
+        const result = await signInWithPopup(auth, googleProvider);
+        await handleAfterLogin(result.user);
+      } else {
+        await signInWithRedirect(auth, googleProvider);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      if (isLocalhost) setLoading(false);
     }
   };
 

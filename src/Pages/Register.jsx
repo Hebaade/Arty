@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box, Button, Typography, Divider,
   TextField, Alert, CircularProgress, Paper
 } from "@mui/material";
-import { createUserWithEmailAndPassword, updateProfile, signInWithPopup } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword, updateProfile,
+  signInWithPopup, signInWithRedirect, getRedirectResult
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, googleProvider } from "../Firebase/auth";
 import { db } from "../Firebase/firestore";
@@ -12,10 +15,13 @@ import { setUser } from "../Store/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+const isLocalhost = window.location.hostname === "localhost";
+
 const Register = () => {
-  const dispatch    = useDispatch();
-  const navigate    = useNavigate();
-  const { t }       = useTranslation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { t }    = useTranslation();
+
   const [name, setName]         = useState("");
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
@@ -30,22 +36,58 @@ const Register = () => {
     }, { merge: true });
   };
 
+  useEffect(() => {
+    if (isLocalhost) return;
+    setLoading(true);
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (result?.user) {
+          const u = result.user;
+          await createUserDoc(u.uid, {
+            displayName: u.displayName,
+            email:       u.email,
+            photoURL:    u.photoURL,
+          });
+          dispatch(setUser({
+            uid:         u.uid,
+            email:       u.email,
+            displayName: u.displayName,
+            photoURL:    u.photoURL,
+          }));
+          navigate("/choose-role");
+        }
+      })
+      .catch((err) => {
+        if (err.code !== "auth/no-current-user") setError(err.message);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   const handleGoogleRegister = async () => {
     setError(""); setLoading(true);
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const u = result.user;
-      await createUserDoc(u.uid, {
-        displayName: u.displayName,
-        email:       u.email,
-        photoURL:    u.photoURL,
-      });
-      dispatch(setUser({ uid: u.uid, email: u.email, displayName: u.displayName, photoURL: u.photoURL }));
-      navigate("/choose-role");
+      if (isLocalhost) {
+        const result = await signInWithPopup(auth, googleProvider);
+        const u = result.user;
+        await createUserDoc(u.uid, {
+          displayName: u.displayName,
+          email:       u.email,
+          photoURL:    u.photoURL,
+        });
+        dispatch(setUser({
+          uid:         u.uid,
+          email:       u.email,
+          displayName: u.displayName,
+          photoURL:    u.photoURL,
+        }));
+        navigate("/choose-role");
+      } else {
+        await signInWithRedirect(auth, googleProvider);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      if (isLocalhost) setLoading(false);
     }
   };
 
@@ -56,7 +98,12 @@ const Register = () => {
       const result = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(result.user, { displayName: name });
       await createUserDoc(result.user.uid, { displayName: name, email });
-      dispatch(setUser({ uid: result.user.uid, email, displayName: name, photoURL: null }));
+      dispatch(setUser({
+        uid:         result.user.uid,
+        email,
+        displayName: name,
+        photoURL:    null,
+      }));
       navigate("/choose-role");
     } catch (err) {
       setError(err.message);
