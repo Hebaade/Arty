@@ -28,6 +28,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [redirectHandled, setRedirectHandled] = useState(false);
 
   const createUserDoc = async (uid, userData) => {
     await setDoc(doc(db, "users", uid), {
@@ -38,14 +39,11 @@ const Register = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
-      if (u) navigate("/choose-role");
-    });
-    return () => unsubscribe();
-  }, []);
+    if (isLocalhost) {
+      setRedirectHandled(true);
+      return;
+    }
 
-  useEffect(() => {
-    if (isLocalhost) return;
     setLoading(true);
     getRedirectResult(auth)
       .then(async (result) => {
@@ -68,8 +66,21 @@ const Register = () => {
       .catch((err) => {
         if (err.code !== "auth/no-current-user") setError(err.message);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setRedirectHandled(true);
+        setLoading(false);
+      });
   }, []);
+
+  useEffect(() => {
+    if (!redirectHandled) return;
+
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      if (u) navigate("/choose-role");
+    });
+
+    return () => unsubscribe();
+  }, [redirectHandled]);
 
   const handleGoogleRegister = async () => {
     setError(""); setLoading(true);

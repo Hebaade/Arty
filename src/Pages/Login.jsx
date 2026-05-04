@@ -26,6 +26,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [redirectHandled, setRedirectHandled] = useState(false);
 
   const handleAfterLogin = async (firebaseUser) => {
     const userData = {
@@ -49,14 +50,11 @@ const Login = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) navigate("/");
-    });
-    return () => unsubscribe();
-  }, []);
+    if (isLocalhost) {
+      setRedirectHandled(true);
+      return;
+    }
 
-  useEffect(() => {
-    if (isLocalhost) return;
     setLoading(true);
     getRedirectResult(auth)
       .then(async (result) => {
@@ -65,8 +63,21 @@ const Login = () => {
       .catch((err) => {
         if (err.code !== "auth/no-current-user") setError(err.message);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setRedirectHandled(true);
+        setLoading(false);
+      });
   }, []);
+
+  useEffect(() => {
+    if (!redirectHandled) return;
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) navigate("/");
+    });
+
+    return () => unsubscribe();
+  }, [redirectHandled]);
 
   const handleGoogleLogin = async () => {
     setError(""); setLoading(true);
