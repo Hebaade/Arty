@@ -1,0 +1,298 @@
+{
+  "nav": {
+    "home": "Home",
+    "gallery": "Gallery",
+    "artTypes": "Art Types",
+    "artists": "Artists",
+    "upload": "Upload",
+    "myArtworks": "My Artworks",
+    "earnings": "Earnings",
+    "myCollection": "My Collection",
+    "favorites": "Favorites",
+    "dashboard": "Dashboard",
+    "canvas": "Canvas",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+
+  "payment": {
+    "saving": "Saving your purchase...",
+    "success_title": "Payment Successful 🎉",
+    "success_desc": "Your artwork has been added to your collection.",
+    "view_collection": "View Collection",
+    "browse": "Browse More"
+  },
+
+  "collection": {
+    "title": "My Collection",
+    "browse": "Browse Gallery",
+    "empty": "No artworks yet",
+    "empty_desc": "Start exploring and collect your first artwork",
+    "explore": "Explore Artworks",
+    "paid": "Paid",
+    "view": "View"
+  },
+
+  "artwork": {
+    "by": "by"
+  },
+  "my_artworks":{
+    "titlee": "My Artworks",
+    "upload": "Upload Artwork",
+    "empty": "You haven't uploaded any artworks yet",
+    "empty_desc": "Share your creativity with the world by uploading your first artwork",
+    "view": "View Artwork",
+    "first artwork": "Upload your first artwork",
+    "new artwork": "Upload New Artwork",
+    "upload img": "Click to upload artwork image",
+    "title": "Title", 
+    "description": "Description",
+    "price": "Price ($)",
+    "category": "Category",
+    "update": "Update Artwork",
+    "not_owner": "Not authorized to edit this artwork",
+    "load_error": "Failed to load artwork",
+    "update_error": "Update failed",
+    "medium": "Medium",
+    "Auction Mode": "Auction Mode",
+    "Fixed Price": "Fixed Price",
+   "set_auction": "Set a starting bid and let collectors compete",
+   "uploading": "Uploading...",
+   "delete_confirm": "Delete Artwork?",
+   "delete_desc": "This action cannot be undone."
+  }
+  ,
+  "common": {
+    "save": "Save",
+    "saving": "Saving...",
+    "update": "Update",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "view": "View",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "no_data": "No data available",
+    "anonymous": "Anonymous"
+  },
+
+  "access": {
+    "denied": "Access Denied",
+    "not_authorized": "You are not authorized"
+  },
+
+  "edit_artwork": {
+    "title": "Edit Artwork",
+    "change_image": "Change Image (optional)",
+    "saving": "Saving changes...",
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "price": "Price",
+      "category": "Category",
+      "medium": "Medium"
+    },
+    "actions": {
+      "update": "Update Artwork"
+    },
+    "messages": {
+      "not_owner": "Not authorized to edit this artwork",
+      "load_error": "Failed to load artwork",
+      "update_error": "Update failed"
+    }
+  },
+
+  "earnings": {
+    "title": "Earnings Dashboard",
+    "subtitle": "Track your revenue and performance",
+    "stats": {
+      "total": "Total Earnings",
+      "sales": "Total Sales",
+      "average": "Avg Price"
+    },
+    "history": "Sales History",
+    "no_sales": "No sales yet"
+  },
+
+  "canvas": {
+    "title": "Canvas Editor",
+    "sections": {
+      "mode": "Mode",
+      "color": "Color",
+      "brush": "Brush Size",
+      "shapes": "Shapes",
+      "actions": "Actions"
+    },
+    "actions": {
+      "draw": "Draw",
+      "select": "Select",
+      "undo": "Undo",
+      "clear": "Clear",
+      "download": "Download",
+      "save": "Save & Publish"
+    },
+    "form": {
+      "title": "Save as Artwork",
+      "fields": {
+        "title": "Title",
+        "price": "Price ($)",
+        "category": "Category"
+      }
+    },
+    "messages": {
+      "validation": "Please fill title, price and category"
+    }
+  },
+
+  "choose_role": {
+    "title": "Choose Your Role",
+    "subtitle": "Select how you want to use the platform",
+    "roles": {
+      "artist": {
+        "title": "Artist",
+        "desc": "Sell your artworks"
+      },
+      "collector": {
+        "title": "Collector",
+        "desc": "Discover and buy art"
+      }
+    },
+    "confirm": "Confirm"
+  },
+
+  "categories": {
+    "painting": "Painting",
+    "digital_art": "Digital Art",
+    "photography": "Photography",
+    "sculpture": "Sculpture",
+    "illustration": "Illustration",
+    "abstract": "Abstract",
+    "portrait": "Portrait",
+    "landscape": "Landscape",
+    "other": "Other"
+  },
+  "favorites": {
+    "title": "My Favorites",
+    "empty": "You haven't favorited any artworks yet",
+    "empty_desc": "Explore the gallery and add artworks to your favorites",
+    "browse": "Browse Gallery",
+    "view": "View Artwork",
+    "saved artworks": "Saved Artwork",
+    "s":"s"
+  }
+,
+  "artists": {
+    "title": "Discover Artists",
+    "empty": "No artists yet",
+    "subtitle": "Discover talented artists in our community",
+    "search":"Search artists...",
+    "artist":"Artist"
+},
+"home":{
+"top":"Top Picks",
+"view gallery":" View Full Gallery",
+"explore":"Explore Now",
+"our_mission":"Our Mission",
+"mission_desc":"We aim to empower artists by providing a digital space where creativity meets opportunity. Our platform bridges the gap between artists and audiences, making art more accessible, discoverable, and meaningful.",
+"join":"Join Now",
+"explore_art":"Explore Art Gallery",
+"call_to_action":"Become Part of the Art World",
+"call_desc":"Explore thousands of artworks, connect with talented artists, and start building your own creative journey today."
+}
+,
+"gallery": {
+    "title": "Art Gallery",
+    "empty": "No artworks found",
+    "search": "Search artworks...",
+    "subtitle":"Discover unique artworks from artists around the world",
+    "artwork":"Artwork",
+    "sort": "Sort by",
+    "collected": "Collected",
+    "s":"s",
+    "by": "by"
+
+  },
+  "profile":{
+    "artworks": "Artworks",
+    "followers": "Followers",
+    "total_value": "Total Value",
+    "artworks_by": "Artworks by",
+  "no_artworks": "No artworks yet",
+    "follow": "Follow",
+    "unfollow": "Unfollow"
+  
+  },
+  "about":{
+    "title":"Explore Art Forms",
+    "subtitle":"Discover various art forms and find your inspiration"
+  },
+  "details":{
+    "price": "Price",
+    "category": "Category",
+    "medium": "Medium",
+    "artist": "Artist",
+    "description": "Description",
+    "buy": "Buy Now",
+    "back": "Back to Gallery",
+    "share": "Share",
+    "log to auction":" Login to join auction",
+    "only collectors can bid": "Only collectors can join auctions",
+    "link copied": "🔗 Link copied to clipboard!"
+  },
+  "dashboard": {
+    "title": "Admin Dashboard",
+    "overview": "Overview",
+    "users": "Users",
+    "artworks": "Artworks",
+    "sales": "Sales",
+    "revenue": "Revenue",
+    "user": "User",
+    "email": "Email",
+    "role": "Role",
+    "action": "Action",
+    "img":"Image",
+    "artwork": "Artwork",
+    "price": "Price",
+    "category": "Category",
+    "artist": "Artist",
+    "buyer": "Buyer"
+  },
+  "auth": {
+    "welcome_back": "Welcome back 👋",
+    "sign_in_subtitle": "Sign in to your Arty account",
+    "google": "Continue with Google",
+    "email": "Email",
+    "password": "Password",
+    "sign_in": "Sign In",
+    "no_account": "Don't have an account?",
+    "register": "Register",
+    "create_account": "Create account 🎨",
+    "register_subtitle": "Join Arty — buy, sell & collect digital art",
+    "full_name": "Full Name",
+    "already_account": "Already have an account?",
+    "sign_in_link": "Sign in",
+    "create_btn": "Create Account"
+  },
+  "user_profile":{
+    "my_profile": "My Profile",
+    "edit":"Edit",
+    "save":"Save",
+    "cancel":"Cancel",
+    "display_name":"Display Name",
+    "location":"Location",
+    "bio":"Bio",
+    "website":"Website",
+    "quick_links":"Quick Links",
+    "profile_info":"Profile Information"
+  },
+  "footer":{
+    "desc":"A modern marketplace for discovering and collecting unique digital artworks from emerging artists worldwide.",
+    "explore":"Explore",
+    "follow":"Follow Us",
+    "made_with_love":" Made with Love for artists and collectors everywhere.",
+    "rights":"Arty. All rights reserved."
+  }
+    
+}
