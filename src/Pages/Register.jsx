@@ -5,7 +5,8 @@ import {
 } from "@mui/material";
 import {
   createUserWithEmailAndPassword, updateProfile,
-  signInWithPopup, signInWithRedirect, getRedirectResult
+  signInWithPopup, signInWithRedirect, getRedirectResult,
+  onAuthStateChanged
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, googleProvider } from "../Firebase/auth";
@@ -20,21 +21,28 @@ const isLocalhost = window.location.hostname === "localhost";
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { t }    = useTranslation();
+  const { t } = useTranslation();
 
-  const [name, setName]         = useState("");
-  const [email, setEmail]       = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError]       = useState("");
-  const [loading, setLoading]   = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const createUserDoc = async (uid, userData) => {
     await setDoc(doc(db, "users", uid), {
       ...userData,
-      role:      null,
+      role: null,
       createdAt: new Date().toISOString(),
     }, { merge: true });
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      if (u) navigate("/choose-role");
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (isLocalhost) return;
@@ -45,14 +53,14 @@ const Register = () => {
           const u = result.user;
           await createUserDoc(u.uid, {
             displayName: u.displayName,
-            email:       u.email,
-            photoURL:    u.photoURL,
+            email: u.email,
+            photoURL: u.photoURL,
           });
           dispatch(setUser({
-            uid:         u.uid,
-            email:       u.email,
+            uid: u.uid,
+            email: u.email,
             displayName: u.displayName,
-            photoURL:    u.photoURL,
+            photoURL: u.photoURL,
           }));
           navigate("/choose-role");
         }
@@ -71,14 +79,14 @@ const Register = () => {
         const u = result.user;
         await createUserDoc(u.uid, {
           displayName: u.displayName,
-          email:       u.email,
-          photoURL:    u.photoURL,
+          email: u.email,
+          photoURL: u.photoURL,
         });
         dispatch(setUser({
-          uid:         u.uid,
-          email:       u.email,
+          uid: u.uid,
+          email: u.email,
           displayName: u.displayName,
-          photoURL:    u.photoURL,
+          photoURL: u.photoURL,
         }));
         navigate("/choose-role");
       } else {
@@ -99,10 +107,10 @@ const Register = () => {
       await updateProfile(result.user, { displayName: name });
       await createUserDoc(result.user.uid, { displayName: name, email });
       dispatch(setUser({
-        uid:         result.user.uid,
+        uid: result.user.uid,
         email,
         displayName: name,
-        photoURL:    null,
+        photoURL: null,
       }));
       navigate("/choose-role");
     } catch (err) {

@@ -5,7 +5,7 @@ import {
 } from "@mui/material";
 import {
   signInWithPopup, signInWithRedirect, getRedirectResult,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword, onAuthStateChanged
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, googleProvider } from "../Firebase/auth";
@@ -20,19 +20,19 @@ const isLocalhost = window.location.hostname === "localhost";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { t }    = useTranslation();
+  const { t } = useTranslation();
 
-  const [email, setEmail]       = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError]       = useState("");
-  const [loading, setLoading]   = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleAfterLogin = async (firebaseUser) => {
     const userData = {
-      uid:         firebaseUser.uid,
-      email:       firebaseUser.email,
+      uid: firebaseUser.uid,
+      email: firebaseUser.email,
       displayName: firebaseUser.displayName,
-      photoURL:    firebaseUser.photoURL,
+      photoURL: firebaseUser.photoURL,
     };
     dispatch(setUser(userData));
     try {
@@ -47,6 +47,13 @@ const Login = () => {
       setError(err.message);
     }
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) navigate("/");
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (isLocalhost) return;
