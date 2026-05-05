@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { onAuthStateChanged, getRedirectResult } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth } from "../Firebase/auth";
 import { db } from "../Firebase/firestore";
@@ -10,25 +10,7 @@ export const useAuthListener = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getRedirectResult(auth)
-      .then(async (result) => {
-        if (result?.user) {
-          const u          = result.user;
-          const userDocRef = doc(db, "users", u.uid);
-          const userDoc    = await getDoc(userDocRef);
-          if (!userDoc.exists()) {
-            await setDoc(userDocRef, {
-              uid:         u.uid,
-              displayName: u.displayName,
-              email:       u.email,
-              photoURL:    u.photoURL,
-              role:        null,
-              createdAt:   new Date().toISOString(),
-            }, { merge: true });
-          }
-        }
-      })
-      .catch((err) => console.error("Redirect error:", err));
+    dispatch(setLoading(true));
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
@@ -38,14 +20,29 @@ export const useAuthListener = () => {
           displayName: firebaseUser.displayName,
           photoURL:    firebaseUser.photoURL,
         };
+
         try {
-          const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
-          if (userDoc.exists() && userDoc.data().role) {
-            dispatch(setRole(userDoc.data().role));
+          const userDocRef = doc(db, "users", firebaseUser.uid);
+          const userDoc    = await getDoc(userDocRef);
+
+          if (userDoc.exists()) {
+            if (userDoc.data().role) {
+              dispatch(setRole(userDoc.data().role));
+            }
+          } else {
+            await setDoc(userDocRef, {
+              uid:         firebaseUser.uid,
+              displayName: firebaseUser.displayName,
+              email:       firebaseUser.email,
+              photoURL:    firebaseUser.photoURL,
+              role:        null,
+              createdAt:   new Date().toISOString(),
+            }, { merge: true });
           }
         } catch (err) {
-          console.error("Error fetching role:", err);
+          console.error("Error fetching user:", err);
         }
+
         dispatch(setUser(userData));
       } else {
         dispatch(logout());

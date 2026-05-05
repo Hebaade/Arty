@@ -57,14 +57,21 @@ const MainLayout = () => (
 );
 
 const AppRouter = () => {
-  const { isLoggedIn } = useAuth();
+ const { isLoggedIn, role } = useAuth();
 
   return (
     <Routes>
 
-      <Route path="/login"    element={isLoggedIn ? <Navigate to="/" /> : <Login />} />
-      <Route path="/register" element={isLoggedIn ? <Navigate to="/" /> : <Register />} />
-
+        <Route path="/login" element={
+        isLoggedIn
+          ? (role ? <Navigate to="/" /> : <Navigate to="/choose-role" />)
+          : <Login />
+      } />
+      <Route path="/register" element={
+        isLoggedIn
+          ? (role ? <Navigate to="/" /> : <Navigate to="/choose-role" />)
+          : <Register />
+      } />
      
       <Route element={<MainLayout />}>
         <Route path="/"            element={<Home />} />
