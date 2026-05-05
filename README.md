@@ -5,7 +5,7 @@
 **Live Demo:** [arty-lake.vercel.app](https://arty-lake.vercel.app/)
 ---
 ### Home
-![Home](public/home.png)
+![Home](public/Home.png)
 ### Home Dark Mode
 ![Home](public/home_darkmode.png)
 ### Home Arabic Language
