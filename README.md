@@ -48,6 +48,8 @@
 ![Payment](public/payment_gate.png)
 ### Successful Payment
 ![Payment](public/payment_sucess.png)
+### Stripe
+![Stripe](public/image.png)
 ### Dashboard(Admin)
 ![Dashboard](public/dashboard_overview.png)
 ![Dashboard](public/dashboard_artworks.png)
