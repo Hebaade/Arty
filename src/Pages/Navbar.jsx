@@ -218,20 +218,20 @@ const Navbar = () => {
                     setDrawerOpen(false);
                   }}
                 >
-                  <ListItemText primary="Profile" />
+                  <ListItemText primary={t("nav.profile")} />
                 </ListItem>
 
                 <ListItem button onClick={handleLogout}>
-                  <ListItemText primary="Logout" />
+                  <ListItemText primary={t("nav.logout")} />
                 </ListItem>
               </>
             ) : (
               <>
                 <ListItem button onClick={() => navigate("/login")}>
-                  <ListItemText primary="Login" />
+                  <ListItemText primary={t("nav.login")} />
                 </ListItem>
                 <ListItem button onClick={() => navigate("/register")}>
-                  <ListItemText primary="Register" />
+                  <ListItemText primary={t("nav.register")} />
                 </ListItem>
               </>
             )}

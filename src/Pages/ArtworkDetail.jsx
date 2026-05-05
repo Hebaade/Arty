@@ -117,7 +117,7 @@ const ArtworkDetail = () => {
     >
 
       <Button
-        startIcon={<ArrowBack />}
+        startIcon={<ArrowBack  />}
         onClick={() => navigate("/gallery")}
         sx={{ mb: 3, textTransform: "none" }}
       >
