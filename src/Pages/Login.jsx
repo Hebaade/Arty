@@ -24,9 +24,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const handleGoogleLogin = async () => {
-    setError("");
-    setLoading(true);
-
+    setError(""); setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const u = result.user;
@@ -48,9 +46,7 @@ const Login = () => {
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
-
+    setError(""); setLoading(true);
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
 
@@ -70,35 +66,119 @@ const Login = () => {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <Box sx={{
+      minHeight: "100vh",
+      bgcolor: "background.default",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      px: 2, py: 4,
+    }}>
       <Box sx={{ width: "100%", maxWidth: 440 }}>
 
-        <Typography variant="h4" textAlign="center">Arty</Typography>
+        <Typography
+          variant="h4" fontWeight={800} textAlign="center" mb={1}
+          sx={{
+            fontFamily: "'Playfair Display', serif",
+            color: "primary.main",
+            cursor: "pointer"
+          }}
+          onClick={() => navigate("/")}
+        >
+          Arty
+        </Typography>
 
-        <Paper sx={{ p: 3 }}>
+        <Typography textAlign="center" color="text.secondary" mb={4} variant="body2">
+          {t("auth.sign_in_subtitle")}
+        </Typography>
 
-          {error && <Alert severity="error">{error}</Alert>}
+        <Paper sx={{
+          p: { xs: 3, sm: 4 },
+          borderRadius: 2,
+          border: "1px solid",
+          borderColor: "divider",
+          boxShadow: "0 4px 24px rgba(44,24,16,0.08)",
+        }}>
 
-          <Button fullWidth variant="outlined" onClick={handleGoogleLogin} sx={{ mb: 2 }}>
+          <Typography variant="h5" fontWeight={700} mb={0.5}
+            sx={{ fontFamily: "'Playfair Display', serif" }}>
+            {t("auth.welcome_back")}
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary" mb={3}>
+            {t("auth.sign_in_subtitle")}
+          </Typography>
+
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+          <Button
+            fullWidth
+            variant="outlined"
+            size="large"
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            startIcon={
+              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width={18} />
+            }
+            sx={{
+              mb: 2,
+              textTransform: "none",
+              fontWeight: 600
+            }}
+          >
             {t("auth.google")}
           </Button>
 
-          <Divider sx={{ mb: 2 }} />
+          <Divider sx={{ mb: 2 }}>
+            <Typography variant="caption" color="text.secondary">or</Typography>
+          </Divider>
 
           <Box component="form" onSubmit={handleEmailLogin}>
-            <TextField fullWidth label={t("auth.email")}
-              value={email} onChange={(e) => setEmail(e.target.value)} sx={{ mb: 2 }} />
+            <TextField
+              fullWidth
+              label={t("auth.email")}
+              type="email"
+              size="small"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{ mb: 1.5 }}
+              required
+            />
 
-            <TextField fullWidth label={t("auth.password")} type="password"
-              value={password} onChange={(e) => setPassword(e.target.value)} sx={{ mb: 2 }} />
+            <TextField
+              fullWidth
+              label={t("auth.password")}
+              type="password"
+              size="small"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              sx={{ mb: 2.5 }}
+              required
+            />
 
-            <Button fullWidth variant="contained" type="submit" disabled={loading}>
-              {loading ? <CircularProgress size={20} /> : t("auth.sign_in")}
+            <Button
+              fullWidth
+              variant="contained"
+              type="submit"
+              size="large"
+              disabled={loading}
+              sx={{
+                textTransform: "none",
+                fontWeight: 700,
+                py: 1.2
+              }}
+            >
+              {loading
+                ? <CircularProgress size={22} color="inherit" />
+                : t("auth.sign_in")}
             </Button>
           </Box>
 
-          <Typography textAlign="center" mt={2}>
-            <Link to="/register">{t("auth.register")}</Link>
+          <Typography variant="body2" sx={{ mt: 2.5, textAlign: "center" }}>
+            {t("auth.no_account")}{" "}
+            <Link to="/register" style={{ color: "#8B5E3C", fontWeight: 600 }}>
+              {t("auth.register")}
+            </Link>
           </Typography>
 
         </Paper>
