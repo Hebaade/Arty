@@ -34,6 +34,7 @@ export const addFavorite = createAsyncThunk(
         artistName:  artwork.artistName,
         price:       artwork.price,
         category:    artwork.category || "Other",
+         artistId: artwork.artistId || null,
       });
       return {
         id:          docRef.id,
@@ -44,6 +45,7 @@ export const addFavorite = createAsyncThunk(
         artistName:  artwork.artistName,
         price:       artwork.price,
         category:    artwork.category || "Other",
+          artistId: artwork.artistId || null,
       };
     } catch (err) {
       return rejectWithValue(err.message);
@@ -69,7 +71,6 @@ export const removeFavorite = createAsyncThunk(
   }
 );
 
-// ── Slice ─────────────────────────────────────────────────
 
 const favoritesSlice = createSlice({
   name: "favorites",
@@ -81,17 +82,15 @@ const favoritesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // fetch
+
       .addCase(fetchFavorites.pending,   (state) => { state.loading = true; state.error = null; })
       .addCase(fetchFavorites.fulfilled, (state, action) => { state.loading = false; state.items = action.payload; })
       .addCase(fetchFavorites.rejected,  (state, action) => { state.loading = false; state.error = action.payload; })
 
-      // add
       .addCase(addFavorite.fulfilled, (state, action) => {
         state.items.push(action.payload);
       })
 
-      // remove
       .addCase(removeFavorite.fulfilled, (state, action) => {
         state.items = state.items.filter((f) => f.artworkId !== action.payload);
       });

@@ -18,7 +18,6 @@ import db from "../Firebase/firestore";
 import { useAuth } from "../Hooks/useAuth";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
-
 const ArtworkDetail = () => {
   const theme = useTheme();
 
@@ -296,6 +295,7 @@ const ArtworkDetail = () => {
         message={t("details.link copied")}
       />
     </Container>
+   
   );
 };
 

@@ -1,6 +1,9 @@
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "./Hooks/useAuth";
-import { CircularProgress, Box } from "@mui/material";
+import { Routes, Route, Navigate, Outlet
+} from "react-router-dom";
+import { useAuth
+} from "./Hooks/useAuth";
+import { CircularProgress, Box
+} from "@mui/material";
 import Login          from "./Pages/Login";
 import Register       from "./Pages/Register";
 import ChooseRole     from "./Pages/ChooseRole";
@@ -22,11 +25,17 @@ import Artists from "./Pages/Artists";
 import ArtistProfile from "./Pages/ArtistProfile";
 import CanvasEditor from "./Pages/CanvasEditor";
 import UserProfile from "./Pages/UserProfile";
-const ProtectedRoute = ({ allowedRoles }) => {
-  const { isLoggedIn, role, loading } = useAuth();
+
+const ProtectedRoute = ({ allowedRoles
+}) => {
+  const { isLoggedIn, role, loading
+  } = useAuth();
 
   if (loading) return (
-    <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+    <Box sx={
+    { display: "flex", justifyContent: "center", mt: 10
+    }
+  }>
       <CircularProgress />
     </Box>
   );
@@ -40,15 +49,20 @@ const ProtectedRoute = ({ allowedRoles }) => {
 
 const MainLayout = () => (
   <Box
-    sx={{
+    sx={
+  {
       minHeight: "100vh",
       display: "flex",
       flexDirection: "column",
-    }}
+  }
+}
   >
     <Navbar />
 
-    <Box sx={{ flex: 1 }}>
+    <Box sx={
+  { flex: 1
+  }
+}>
       <Outlet />
     </Box>
 
@@ -57,7 +71,8 @@ const MainLayout = () => (
 );
 
 const AppRouter = () => {
- const { isLoggedIn, role } = useAuth();
+ const { isLoggedIn, role
+  } = useAuth();
 
   return (
     <Routes>
@@ -66,47 +81,89 @@ const AppRouter = () => {
         isLoggedIn
           ? (role ? <Navigate to="/" /> : <Navigate to="/choose-role" />)
           : <Login />
-      } />
+  } />
       <Route path="/register" element={
         isLoggedIn
           ? (role ? <Navigate to="/" /> : <Navigate to="/choose-role" />)
           : <Register />
-      } />
+  } />
      
-      <Route element={<MainLayout />}>
-        <Route path="/"            element={<Home />} />
-        <Route path="/choose-role" element={<ChooseRole />} />
-        <Route path="/artwork/:id" element={<ArtworkDetail />} />
-        <Route path="/payment-success" element={<PaymentSuccess />} />
-        <Route path="/artists" element={<Artists />} />
-<Route path="/gallery"   element={<Gallery />} />
-<Route path="/art-types" element={<ArtTypes />} />
-<Route path="/artist/:artistId" element={<ArtistProfile />} />
+      <Route element={<MainLayout />
+  }>
+        <Route path="/"            element={<Home />
+  } />
+        <Route path="/choose-role" element={<ChooseRole />
+  } />
+        <Route path="/artwork/:id" element={<ArtworkDetail />
+  } />
+        <Route path="/payment-success" element={<PaymentSuccess />
+  } />
+        <Route path="/artists" element={<Artists />
+  } />
+<Route path="/gallery"   element={<Gallery />
+  } />
+<Route path="/art-types" element={<ArtTypes />
+  } />
+<Route path="/artist/:artistId" element={<ArtistProfile />
+  } />
     
-        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-          <Route path="/admin" element={<AdminDashboard />} />
+        <Route element={<ProtectedRoute allowedRoles={
+      [
+        "admin"
+      ]
+    } />
+  }>
+          <Route path="/admin" element={<AdminDashboard />
+  } />
         </Route>
 
      
         
-        <Route element={<ProtectedRoute allowedRoles={["artist"]} />}>
-          <Route path="/artist/upload"      element={<UploadArtwork />} />
-          <Route path="/artist/my-artworks" element={<MyArtworks />} />
-          <Route path="/artist/earnings"    element={<Earnings />} />
-          <Route path="/edit-artwork/:id" element={<EditArtwork />} />
-          <Route path="/artist/canvas" element={<CanvasEditor />} />
+        <Route element={<ProtectedRoute allowedRoles={
+      [
+        "artist"
+      ]
+    } />
+  }>
+          <Route path="/artist/upload"      element={<UploadArtwork />
+  } />
+          <Route path="/artist/my-artworks" element={<MyArtworks />
+  } />
+          <Route path="/artist/earnings"    element={<Earnings />
+  } />
+          <Route path="/edit-artwork/:id" element={<EditArtwork />
+  } />
+          <Route path="/artist/canvas" element={<CanvasEditor />
+  } />
+  
         </Route>
 
-        <Route element={<ProtectedRoute allowedRoles={["collector"]} />}>
-          <Route path="/collector/my-collection" element={<MyCollection />} />
-          <Route path="/collector/favorites"     element={<Favorites />} />
+        <Route element={<ProtectedRoute allowedRoles={
+      [
+        "collector"
+      ]
+    } />
+  }>
+          <Route path="/collector/my-collection" element={<MyCollection />
+  } />
+          <Route path="/collector/favorites"     element={<Favorites />
+  } />
         </Route>
-<Route element={<ProtectedRoute allowedRoles={["admin", "artist", "collector"]} />}>
-  <Route path="/profile" element={<UserProfile />} />
+<Route element={<ProtectedRoute allowedRoles={
+      [
+        "admin",
+        "artist",
+        "collector"
+      ]
+    } />
+  }>
+  <Route path="/profile" element={<UserProfile />
+  } />
 </Route>
       </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />
+  } />
 
     </Routes>
   );
