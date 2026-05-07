@@ -58,7 +58,7 @@ const MainLayout = () => (
 
 const AppRouter = () => {
  const { isLoggedIn, role } = useAuth();
-0
+
   return (
     <Routes>
 
@@ -82,7 +82,7 @@ const AppRouter = () => {
 <Route path="/gallery"   element={<Gallery />} />
 <Route path="/art-types" element={<ArtTypes />} />
 <Route path="/artist/:artistId" element={<ArtistProfile />} />
-        {/* Admin */}
+    
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/admin" element={<AdminDashboard />} />
         </Route>

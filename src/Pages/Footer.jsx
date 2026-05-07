@@ -64,7 +64,8 @@ const Footer = () => {
             </Box>
           </Box>
 
-          {/* Social */}
+
+          
           <Box>
             <Typography fontWeight={700} mb={2}>
               {t("footer.follow")}

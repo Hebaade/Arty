@@ -1,12 +1,6 @@
 const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
-/**
- * Upload image to Cloudinary
- * @param {File} file - الصورة
- * @param {function} onProgress - callback(percent)
- * @returns {Promise<string>} - image URL
- */
 export const uploadImage = async (file, onProgress) => {
   const formData = new FormData();
   formData.append("file", file);
@@ -38,10 +32,6 @@ export const uploadImage = async (file, onProgress) => {
   });
 };
 
-/**
- * Delete image from Cloudinary (محتاج backend عشان فيها API Secret)
- * هنعملها بعدين مع الـ Firebase Functions
- */
 export const getOptimizedUrl = (url, width = 800) => {
   if (!url) return "";
   return url.replace("/upload/", `/upload/w_${width},q_auto,f_auto/`);
